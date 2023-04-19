@@ -1,0 +1,136 @@
+class Node:
+    def __init__(self,data=None):
+        self.prev = None
+        self.data = data
+        self.next = None
+
+class DLinkedList:
+    def __init__(self):
+        self.head = None
+        
+    #Printing
+    def printlinkedlist(self):
+        temp = self.head
+        while temp is not None:
+            print(temp.data,sep=",")
+            temp = temp.next
+            
+    def printlinkedlist_rev(self):
+        temp = self.head
+        while temp.next is not None:
+            temp = temp.next
+        while temp is not None:
+            print(temp.data)
+            temp = temp.prev
+            
+    #Insertion
+    def insertbeginning(self,node):
+        if self.head == None:
+            self.head = node
+        else:
+            self.head.prev = node
+            node.next = self.head
+            self.head = node
+        
+    def insertend(self,node):
+        if self.head is None:
+            self.head = node
+            return
+        temp = self.head
+        while temp.next is not None:
+            temp = temp.next
+        temp.next = node
+        node.prev = temp
+        
+    def insertmid_key(self,key,node):
+        temp = self.head
+        while temp.next is not None:
+            if temp.data==key:
+                temp = temp.next
+                node.prev = temp.prev
+                temp.prev.next = node
+                node.next = temp
+                temp.prev = node
+                return
+            temp = temp.next
+        print("Key Not Found")
+        
+    
+    def insertmid_pos(self,pos,node):
+        temp = self.head
+        cnt = 0
+        if temp is None or temp.next is None:
+            self.insertend(node)
+            print("Specified Index Not Found, Inserting at End")
+            return
+        while cnt<pos and temp is not None:
+            temp = temp.next
+            cnt+=1
+        node.prev = temp.prev
+        temp.prev.next = node
+        node.next = temp
+        temp.prev = node
+
+    #Removal
+    def removebegnning(self):
+        if self.head is None:
+            print("Linked List Empty")
+        elif self.head.next is None:
+            self.head = None
+        else:
+            self.head = self.head.next
+            self.head.prev = None
+    
+    def removeend(self):
+        curr_head = self.head
+        while curr_head.next is not None:
+            curr_head = curr_head.next
+        curr_head.prev.next = None
+        curr_head = None
+        
+    def remove_key(self,key):
+        curr_head = self.head
+        while curr_head is not None:
+            if curr_head.data == key:
+                curr_head.prev.next = curr_head.next
+                if curr_head.next is not None:
+                    curr_head.next.prev = curr_head.prev
+                return
+            curr_head=curr_head.next
+        print("Key Not Found")
+                
+    def remove_pos(self,pos):
+        curr_head = self.head
+        cnt=0
+        while curr_head is not None:
+            if cnt==pos:
+                curr_head.prev.next = curr_head.next
+                curr_head.next.prev = curr_head.prev
+                curr_head = None
+                return
+            cnt+=1
+            curr_head = curr_head.next
+        print("Position Not Found, Out of Bounds")
+            
+
+    #Count Number of Nodes
+    def countnode(self):
+        cnt=0
+        curr_head = self.head
+        while curr_head is not None:
+            cnt+=1
+            curr_head = curr_head.next
+            
+    #Remove Duplicates (Sorted)
+    def removedup(self):
+        curr_head = self.head
+        while curr_head.next is not None:
+            if curr_head.data == curr_head.next.data:
+                curr_head.next = curr_head.next.next
+                try:
+                    curr_head.next.next.prev = curr_head
+                except:
+                    if curr_head.data == curr_head.next.data:
+                        curr_head.next = None
+                continue
+            curr_head = curr_head.next
